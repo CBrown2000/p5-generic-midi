@@ -1,20 +1,24 @@
 //////////////////////////
 /* EDIT VALUES BELOW TO MATCH DEVICE SLIDERS*/
-const CCSLIDER1 = 0;
-const CCSLIDER2 = 0;
-const CCSLIDER3 = 0;
-const CCSLIDER4 = 0;
-const CCSLIDER5 = 0;
-const CCSLIDER6 = 0;
-const CCSLIDER7 = 0;
-const CCSLIDER8 = 0;
-const CCSLIDER9 = 0;
+const CCSLIDER1 = 2;
+const CCSLIDER2 = 3;
+const CCSLIDER3 = 4;
+const CCSLIDER4 = 5;
+const CCSLIDER5 = 6;
+const CCSLIDER6 = 8;
+const CCSLIDER7 = 9;
+const CCSLIDER8 = 12;
+const CCSLIDER9 = 86;
+const sliderData = [0,0,0,0,0,0,0,0,0];
+let colours 
 let myController;
+
 //////////////////////////
 // built in P5 function gets called at the beginning
 function setup() {
     createCanvas(innerWidth, innerHeight);
     background(0);
+    colours = ['rgba(23,22,20,0.5)','rgba(58,38,24,0.5)','rgba(117,64,67,0.5)','rgba(154,136,115,0.5)','rgba(55,66,61,0.5)','rgba(55,61,32,0.5)','rgba(113,119,68,0.5)','rgba(188,189,139,0.5)','rgba(118,97,83,0.5)']
     WebMidi
         .enable()
         .then(onEnabled)
@@ -57,25 +61,63 @@ function allCC(e) {
     let ratio = e.data[2] / 127
     switch (e.controller.number) {
         case CCSLIDER1: 
+            sliderData[0] = ratio;
             break;
         case CCSLIDER2: 
+            sliderData[1] = ratio;
             break;
         case CCSLIDER3: 
+            sliderData[2] = ratio;        
             break;
         case CCSLIDER4: 
+            sliderData[3] = ratio;
             break;
         case CCSLIDER5: 
+            sliderData[4] = ratio;
             break;
         case CCSLIDER6: 
+            sliderData[5] = ratio;
             break;
         case CCSLIDER7: 
+            sliderData[6] = ratio;
             break;
         case CCSLIDER8: 
+            sliderData[7] = ratio;
             break;
         case CCSLIDER9:
+            sliderData[8] = ratio;
             break;
     }
 }
 function draw() {
+    // clear();
+    background(0,10)
+    
+    let rectHeight = height/sliderData.length;
+    let circleHeight = height/sliderData.length;
+    for(let i = 0; i < sliderData.length; i++){
+        let baseNoise = 800;
+        let noiseShift = random(-baseNoise * sliderData[i], baseNoise * sliderData[i]);
+        // x, y, width, height
+        fill(colours[i])
+        // rect(width/4, i * rectHeight, width/2 * sliderData[i], rectHeight)
+        // circle(width/4, i * circleHeight, width/2 * sliderData[i], circleHeight)
+        beginShape();
+        //top left of rect
+        vertex(width/4 + noiseShift, i * rectHeight + noiseShift);
+        noiseShift = random(-baseNoise * sliderData[i], baseNoise * sliderData[i]);
+        //top right of rect
+        vertex(width*0.75 + noiseShift, i * rectHeight + noiseShift)
+        noiseShift = random(-baseNoise * sliderData[i], baseNoise * sliderData[i]);
+        //bottom right of rect
+        vertex(width*0.75 + noiseShift, i * rectHeight + rectHeight + noiseShift);
+        noiseShift = random(-baseNoise * sliderData[i], baseNoise * sliderData[i]);
+        //bottom left of rect
+        vertex(width/4 + noiseShift, i * rectHeight + rectHeight + noiseShift);
+        noiseShift = random(-baseNoise * sliderData[i], baseNoise * sliderData[i]);
+        //join last vertex with close
+        endShape(CLOSE)
+
+    }
 
 }
